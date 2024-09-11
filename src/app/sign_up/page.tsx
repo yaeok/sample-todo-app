@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 
 import { AuthRepository } from '../../../feature/infrastracture/repository/auth'
@@ -11,6 +12,7 @@ interface SignUpForm {
 }
 
 const SignUpPage: React.FC = () => {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -18,9 +20,14 @@ const SignUpPage: React.FC = () => {
   } = useForm<SignUpForm>()
 
   const onSubmit = async (data: SignUpForm) => {
-    const { email, password } = data
-    const authRepository = new AuthRepository()
-    await authRepository.createUserWithEmailAndPassword(email, password)
+    try {
+      const { email, password } = data
+      const authRepository = new AuthRepository()
+      await authRepository.createUserWithEmailAndPassword(email, password)
+      router.push('/todo')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
